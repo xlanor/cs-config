@@ -11,19 +11,14 @@ services:
       - "8443:8443"
     restart: always
     volumes: 
-      - "codeserver_data:/root/project"
-      - data:/home/coder/.local/share/code-server
-      # - "/home/jingkai/code-server/settings.json:/home/coder/.local/share/code-server/User/settings.json"
-      #      - type: bind
-      #source: /home/jingkai/code-server/settings.json
-      #target: /home/coder/project/settings.json
-      #target: /home/coder/.local/share/code-server/User/settings.json
+      - "jingkai_cs_data:/root/project"
+      - jingkai_cs_settings:/home/coder/.local/share/code-server
 volumes: 
-  codeserver_data: 
+  jingkai_cs_data: 
     driver: local-persist
     driver_opts: 
-      mountpoint: /home/jingkai/data/codeserver_data
-  data:
+      mountpoint: /home/jingkai/code-server/cs_data
+  jingkai_cs_settings:
     driver: local-persist
     driver_opts:
-      mountpoint: /home/jingkai/cs_settings
+      mountpoint: /home/jingkai/code-server/cs_settings

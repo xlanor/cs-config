@@ -1,0 +1,55 @@
+server{
+	server_name your.server.name www.your.server.name;    
+	listen 443 ssl; # managed by Certbot
+	
+
+
+    	# Strong TLS configuration. Originally taken from https://cipherli.st/.
+      	ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers on;
+	ssl_dhparam /etc/nginx/kpdhparam.pem; 
+	#openssl dhparam -out /etc/nginx/dhparam.pem 4096
+	ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
+	ssl_ecdh_curve secp384r1;
+	ssl_session_timeout 10m;
+	ssl_session_cache shared:SSL:10m;
+	ssl_session_tickets off;
+	ssl_stapling on;
+	ssl_stapling_verify on;
+	resolver 8.8.8.8 8.8.4.4 valid=300s;
+	resolver_timeout 5s;
+	
+	# Other security options.
+	# add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
+	add_header X-Frame-Options DENY;
+	add_header X-Content-Type-Options nosniff;
+	add_header X-XSS-Protection "1; mode=block";
+
+	location / {
+		proxy_pass http://localhost:1337/;
+		proxy_set_header Accept-Encoding gzip;
+		proxy_set_header Connection upgrade;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+		}
+
+    ssl_certificate /etc/letsencrypt/live/your.server.name/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/your.server.name/privkey.pem; # managed by Certbot
+
+}
+server{
+	if ($host = www.your.server.name) {
+        	return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+
+	if ($host = your.server.name) {
+        	return 301 https://$host$request_uri;
+    	} # managed by Certbot
+
+	listen 80;
+	server_name your.server.name www.your.server.name;
+
+    	return 404; # managed by Certbot
+}
