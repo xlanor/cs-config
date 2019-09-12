@@ -1,0 +1,29 @@
+--- 
+version: "3.2"
+services: 
+  codeserver:
+    command: "--allow-http"
+    container_name: codeserver
+    env_file:
+      - cs.env
+    image: "codercom/code-server:latest"
+    ports: 
+      - "8443:8443"
+    restart: always
+    volumes: 
+      - "codeserver_data:/root/project"
+      - data:/home/coder/.local/share/code-server
+      # - "/home/jingkai/code-server/settings.json:/home/coder/.local/share/code-server/User/settings.json"
+      #      - type: bind
+      #source: /home/jingkai/code-server/settings.json
+      #target: /home/coder/project/settings.json
+      #target: /home/coder/.local/share/code-server/User/settings.json
+volumes: 
+  codeserver_data: 
+    driver: local-persist
+    driver_opts: 
+      mountpoint: /home/jingkai/data/codeserver_data
+  data:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /home/jingkai/cs_settings
