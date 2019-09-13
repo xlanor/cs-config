@@ -2,16 +2,17 @@
 version: "3.2"
 services: 
   codeserver:
-    command: "--allow-http"
+    #command: "--allow-http"
+    command: "--auth password"
     container_name: codeserver
     env_file:
       - cs.env
-    image: "codercom/code-server:latest"
+    image: "codercom/code-server:2.1472-vsc1.38.1"
     ports: 
-      - "8443:8443"
+      - "8443:8080"
     restart: always
     volumes: 
-      - "jingkai_cs_data:/root/project"
+      - "jingkai_cs_data:/home/coder/project"
       - jingkai_cs_settings:/home/coder/.local/share/code-server
 volumes: 
   jingkai_cs_data: 
